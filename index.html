@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Piaa ✨</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg-pink: #FFF0F5;
+      --card-bg: #FFFFFF;
+      --primary-pink: #FF85A1;
+      --accent-pink: #FF477E;
+      --text-main: #4A3E3D;
+      --text-muted: #8C7A7B;
+      --shadow: 0 10px 30px rgba(255, 133, 161, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #FFE5EC 0%, #FFF0F5 50%, #F0E6FF 100%);
+      font-family: 'Fredoka', sans-serif;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+      overflow-x: hidden;
+    }
+
+    /* Floating Background Elements */
+    .bg-heart {
+      position: fixed;
+      font-size: 1.2rem;
+      pointer-events: none;
+      z-index: 1;
+      animation: floatUp 8s linear infinite;
+      opacity: 0.6;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.8) rotate(0deg); opacity: 0; }
+      20% { opacity: 0.6; }
+      100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+    }
+
+    /* Transition Overlay Animation */
+    aside.transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(255, 240, 245, 0.95);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    aside.transition-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    span.transition-sparkle {
+      font-size: 4rem;
+      animation: pulseCute 0.6s infinite alternate ease-in-out;
+    }
+
+    p.transition-text {
+      font-family: 'Caveat', cursive;
+      font-size: 2.2rem;
+      color: var(--accent-pink);
+      margin-top: 10px;
+    }
+
+    @keyframes pulseCute {
+      0% { transform: scale(0.8) rotate(-10deg); }
+      100% { transform: scale(1.2) rotate(10deg); }
+    }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 420px;
+      min-height: 650px;
+      background: var(--card-bg);
+      border-radius: 35px;
+      padding: 25px 20px;
+      box-shadow: var(--shadow);
+      border: 4px solid #FFF;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    section {
+      display: none;
+      width: 100%;
+      height: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    section.active {
+      display: flex;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: var(--accent-pink);
+      margin-bottom: 8px;
+    }
+
+    p.sub-title {
+      font-family: 'Caveat', cursive;
+      font-size: 2.2rem;
+      color: var(--primary-pink);
+      margin-bottom: 12px;
+    }
+
+    p.desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+
+    /* Buttons */
+    nav {
+      position: relative;
+      display: flex;
+      gap: 15px;
+      width: 100%;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    button {
+      padding: 12px 28px;
+      border-radius: 25px;
+      border: none;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .btn-yes {
+      background: var(--primary-pink);
+      color: #FFF;
+    }
+
+    .btn-yes:hover {
+      background: var(--accent-pink);
+      transform: scale(1.05);
+    }
+
+    .btn-no {
+      background: #EAEAEA;
+      color: #777;
+      position: relative;
+    }
+
+    /* Character */
+    figure {
+      width: 160px;
+      height: 160px;
+      margin: 15px 0;
+    }
+
+    /* Balloons */
+    ul.balloon-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      width: 100%;
+      margin: 20px 0;
+      list-style: none;
+    }
+
+    li.balloon-item {
+      font-size: 3.8rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    li.balloon-item:hover {
+      transform: scale(1.15) rotate(5deg);
+    }
+
+    li.balloon-item.popped {
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    output.revealed-message {
+      font-family: 'Caveat', cursive;
+      font-size: 2.2rem;
+      color: var(--accent-pink);
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Candle Blow */
+    figure.cake-wrapper {
+      position: relative;
+      margin: 30px 0;
+      cursor: pointer;
+    }
+
+    span.candle-flame {
+      width: 14px;
+      height: 22px;
+      background: #FF9F1C;
+      border-radius: 50% 50% 20% 20%;
+      position: absolute;
+      top: -18px;
+      left: calc(50% - 7px);
+      box-shadow: 0 0 10px #FF9F1C, 0 0 20px #FFBF69;
+      animation: flameWiggle 0.2s infinite alternate;
+    }
+
+    span.candle-flame.off {
+      display: none;
+    }
+
+    @keyframes flameWiggle {
+      0% { transform: scale(1) rotate(-2deg); }
+      100% { transform: scale(1.1) rotate(2deg); }
+    }
+
+    /* Photo Stack */
+    ul.photo-stack {
+      position: relative;
+      width: 230px;
+      height: 260px;
+      margin: 20px 0;
+      list-style: none;
+    }
+
+    li.polaroid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #FFF;
+      padding: 12px 12px 35px 12px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+      border: 1px solid #F0F0F0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.4s ease;
+      cursor: pointer;
+    }
+
+    li.polaroid img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    li.polaroid figcaption {
+      font-family: 'Caveat', cursive;
+      font-size: 1.4rem;
+      color: var(--text-main);
+      margin-top: 8px;
+    }
+
+    /* Letter with Floating Pen and Character-by-Character Typing */
+    article.letter-paper {
+      background: #FFF9FA;
+      border: 2px dashed #FFC2D1;
+      border-radius: 20px;
+      padding: 20px;
+      width: 100%;
+      text-align: left;
+      font-family: 'Caveat', cursive;
+      font-size: 1.45rem;
+      color: #5A4A4B;
+      line-height: 1.6;
+      box-shadow: inset 0 0 10px rgba(255,194,209,0.2);
+      min-height: 300px;
+      position: relative;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    span.floating-pen {
+      position: absolute;
+      font-size: 1.8rem;
+      pointer-events: none;
+      display: none;
+      z-index: 20;
+      transform: translate(2px, -24px) rotate(-15deg);
+      transition: top 0.05s ease, left 0.05s ease;
+    }
+
+    /* Final Surprise */
+    span.gift-box {
+      font-size: 4.5rem;
+      cursor: pointer;
+      margin: 20px 0;
+      display: inline-block;
+      transition: transform 0.15s;
+    }
+
+    span.gift-box:active {
+      transform: scale(0.85);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cute Screen Transition Popup Animation -->
+  <aside class="transition-overlay" id="transition-overlay">
+    <span class="transition-sparkle" id="transition-emoji">✨</span>
+    <p class="transition-text" id="transition-text">Unlocking Next Surprise...</p>
+  </aside>
+
+  <!-- Main Container -->
+  <main>
+
+    <!-- SCREEN 1: Welcome Screen -->
+    <section class="active" id="screen-1">
+      <figure>
+        <svg viewBox="0 0 200 200" width="100%" height="100%">
+          <circle cx="100" cy="100" r="80" fill="#FFE5EC" />
+          <circle cx="55" cy="55" r="22" fill="#5A4A4B" />
+          <circle cx="145" cy="55" r="22" fill="#5A4A4B" />
+          <circle cx="100" cy="100" r="65" fill="#FFFFFF" />
+          <ellipse cx="75" cy="95" rx="14" ry="18" fill="#5A4A4B" transform="rotate(-15 75 95)" />
+          <ellipse cx="125" cy="95" rx="14" ry="18" fill="#5A4A4B" transform="rotate(15 125 95)" />
+          <circle cx="77" cy="92" r="5" fill="#FFFFFF" />
+          <circle cx="123" cy="92" r="5" fill="#FFFFFF" />
+          <circle cx="60" cy="112" r="10" fill="#FF85A1" opacity="0.6" />
+          <circle cx="140" cy="112" r="10" fill="#FF85A1" opacity="0.6" />
+          <ellipse cx="100" cy="105" rx="6" ry="4" fill="#5A4A4B" />
+          <path d="M 93 113 Q 100 120 107 113" stroke="#5A4A4B" stroke-width="3" fill="none" stroke-linecap="round" />
+        </svg>
+      </figure>
+      <h1>Happy Birthday! 🎉</h1>
+      <p class="sub-title">Piaa ✨</p>
+      <p class="desc">Are you ready for your special birthday surprises?</p>
+
+      <nav>
+        <button class="btn-yes" onclick="nextScreenWithAnimation(2, '🎈', 'Let\'s Pop Balloons!')">Yes! 💕</button>
+        <button class="btn-no" id="btn-no" onmouseover="dodgeNoButton()" onclick="dodgeNoButton()">No 😜</button>
+      </nav>
+    </section>
+
+    <!-- SCREEN 2: Balloon Pop -->
+    <section id="screen-2">
+      <h1>Pop the Balloons! 🎈</h1>
+      <p class="desc">Tap any balloon to pop them!</p>
+
+      <ul class="balloon-grid">
+        <li class="balloon-item" onclick="popBalloon(this)">🎈</li>
+        <li class="balloon-item" onclick="popBalloon(this)">🎈</li>
+        <li class="balloon-item" onclick="popBalloon(this)">🎈</li>
+        <li class="balloon-item" onclick="popBalloon(this)">🎈</li>
+      </ul>
+
+      <output class="revealed-message" id="balloon-text"></output>
+      <button class="btn-yes" id="balloon-next" style="display: none; margin-top: 15px;" onclick="nextScreenWithAnimation(3, '🎂', 'Make a Birthday Wish!')">Make a Wish ✨</button>
+    </section>
+
+    <!-- SCREEN 3: Candle Blow -->
+    <section id="screen-3">
+      <h1>Make a Wish 🎂</h1>
+      <p class="desc">Tap the flame to blow out your candle!</p>
+
+      <figure class="cake-wrapper" onclick="blowCandle()">
+        <span class="candle-flame" id="candle-flame"></span>
+        <svg width="140" height="110" viewBox="0 0 140 110">
+          <rect x="62" y="10" width="16" height="40" fill="#FFC2D1" rx="4" />
+          <path d="M 15 100 Q 70 112 125 100 L 120 55 Q 70 68 20 55 Z" fill="#FF85A1" />
+          <path d="M 20 55 Q 70 70 120 55 Q 115 42 70 42 Q 25 42 20 55 Z" fill="#FFF" />
+          <circle cx="45" cy="80" r="4" fill="#FFF" />
+          <circle cx="70" cy="85" r="4" fill="#FFF" />
+          <circle cx="95" cy="80" r="4" fill="#FFF" />
+        </svg>
+      </figure>
+
+      <p id="wish-status" style="color: var(--accent-pink); font-family: 'Caveat', cursive; font-size: 1.6rem; min-height: 30px;"></p>
+      <button class="btn-yes" id="candle-next" style="display: none;" onclick="nextScreenWithAnimation(4, '📸', 'Unlocking Photo Album...')">Our Memories 📸</button>
+    </section>
+
+    <!-- SCREEN 4: Memories Stack -->
+    <section id="screen-4">
+      <h1>Sweet Memories 📸</h1>
+      <p class="desc">Tap photos to stack through your special moments!</p>
+
+      <ul class="photo-stack" id="photo-stack" onclick="cyclePhotos()">
+        <li class="polaroid" style="transform: rotate(-4deg); z-index: 5;">
+          <img src="images/piaa1.jpeg" alt="Memory 1">
+          <figcaption>Always Smiling 🌟</figcaption>
+        </li>
+        <li class="polaroid" style="transform: rotate(3deg); z-index: 4;">
+          <img src="images/piaa2.jpeg" alt="Memory 2">
+          <figcaption>Beautiful Moments ✨</figcaption>
+        </li>
+        <li class="polaroid" style="transform: rotate(-2deg); z-index: 3;">
+          <img src="images/piaa3.jpeg" alt="Memory 3">
+          <figcaption>Celebrating You 🎂</figcaption>
+        </li>
+        <li class="polaroid" style="transform: rotate(-5deg); z-index: 2;">
+          <img src="images/piaa4.jpeg" alt="Memory 4">
+          <figcaption>Special Moments 🎉</figcaption>
+        </li>
+        <li class="polaroid" style="transform: rotate(2deg); z-index: 1;">
+          <img src="images/piaa5.jpeg" alt="Memory 1">
+          <figcaption>Always Smiling 🌟</figcaption>
+        </li>
+      </ul>
+
+      <button class="btn-yes" onclick="nextScreenWithAnimation(5, '✍️', 'Writing Your Secret Letter...')">Read Letter 💌</button>
+    </section>
+
+    <!-- SCREEN 5: Letter (Writes Character by Character with Pen) -->
+    <section id="screen-5">
+      <h1>Message From Heart 💌</h1>
+      <article class="letter-paper" id="letter-paper">
+        <span class="floating-pen" id="floating-pen">✏️</span>
+        <span id="letter-typed-content"></span>
+      </article>
+      <button class="btn-yes" id="letter-next" style="display: none; margin-top: 15px;" onclick="nextScreenWithAnimation(6, '🎁', 'Opening Final Gift...')">Final Surprise 🎁</button>
+    </section>
+
+    <!-- SCREEN 6: Final Surprise -->
+    <section id="screen-6">
+      <h1>Unwrap Surprise 🎁</h1>
+      <p class="desc">Tap the gift to unwrap!</p>
+
+      <span class="gift-box" id="gift-box" onclick="tapGift()">🎁</span>
+      <p id="gift-status" style="color: var(--primary-pink); font-weight: 600;">3 more taps!</p>
+
+      <article id="final-card" style="display: none; margin-top: 15px;">
+        <p class="sub-title">Lots of Love Piaa! ❤️</p>
+        <p class="desc">Hope you loved your sweet birthday surprise ✨</p>
+        <button class="btn-yes" onclick="triggerCelebration()">Celebrate Again 🎉</button>
+      </article>
+    </section>
+
+  </main>
+
+  <script>
+    // Cute Screen Transition Animation
+    function nextScreenWithAnimation(nextScreenNum, emoji, text) {
+      const overlay = document.getElementById('transition-overlay');
+      document.getElementById('transition-emoji').innerText = emoji || '✨';
+      document.getElementById('transition-text').innerText = text || 'Unlocking Surprise...';
+
+      overlay.classList.add('active');
+
+      setTimeout(() => {
+        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+        const targetSection = document.getElementById(`screen-${nextScreenNum}`);
+        targetSection.classList.add('active');
+
+        if (nextScreenNum === 5) {
+          startCharacterByCharacterWriting();
+        }
+
+        setTimeout(() => {
+          overlay.classList.remove('active');
+        }, 300);
+      }, 700);
+    }
+
+    // Dodging 'No' Button
+    function dodgeNoButton() {
+      const btnNo = document.getElementById('btn-no');
+      const randomX = (Math.random() - 0.5) * 180;
+      const randomY = (Math.random() - 0.5) * 180;
+      btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    }
+
+    // Balloon Pop Logic ("You are so special")
+    const targetSequence = ["You", "are", "so", "special! 💖"];
+    let poppedCount = 0;
+    let revealedWords = [];
+
+    function popBalloon(el) {
+      if (el.classList.contains('popped')) return;
+      el.classList.add('popped');
+      
+      revealedWords.push(targetSequence[poppedCount]);
+      poppedCount++;
+
+      document.getElementById('balloon-text').innerText = revealedWords.join(' ');
+      confetti({ particleCount: 20, spread: 40, origin: { y: 0.6 } });
+
+      if (poppedCount === 4) {
+        document.getElementById('balloon-next').style.display = 'inline-block';
+      }
+    }
+
+    // Candle Blow Logic
+    function blowCandle() {
+      const flame = document.getElementById('candle-flame');
+      if (flame.classList.contains('off')) return;
+      flame.classList.add('off');
+      document.getElementById('wish-status').innerText = 'Wish Made! ✨ May it come true!';
+      confetti({ particleCount: 40, spread: 60, origin: { y: 0.5 } });
+      document.getElementById('candle-next').style.display = 'inline-block';
+    }
+
+    // Photo Stack Cycling
+    function cyclePhotos() {
+      const stack = document.getElementById('photo-stack');
+      const topPhoto = stack.firstElementChild;
+      topPhoto.style.transform = 'translateY(150px) rotate(20deg)';
+      topPhoto.style.opacity = '0';
+      
+      setTimeout(() => {
+        stack.appendChild(topPhoto);
+        topPhoto.style.transform = '';
+        topPhoto.style.opacity = '1';
+        
+        Array.from(stack.children).forEach((card, index) => {
+          card.style.zIndex = stack.children.length - index;
+        });
+      }, 300);
+    }
+
+    // Pen Writes Letter One Character by One Character
+    const letterText = "Dearest Piaa,\n\nHappy Birthday to someone truly special! 🌸\n\nYou bring so much warmth, kindness, and light into every day.\n\nI hope your birthday is filled with endless sweet surprises, laughter, and all the happiness you deserve.\n\nKeep shining bright always! ✨\n\nWith all my love ❤️";
+
+    let hasWritten = false;
+    function startCharacterByCharacterWriting() {
+      if (hasWritten) return;
+      hasWritten = true;
+
+      const typedContent = document.getElementById('letter-typed-content');
+      const pen = document.getElementById('floating-pen');
+      const container = document.getElementById('letter-paper');
+      
+      typedContent.innerText = "";
+      pen.style.display = "block";
+
+      // Insert invisible dummy span to track pen cursor coordinates
+      const cursorTracker = document.createElement('span');
+      cursorTracker.innerText = "|";
+      cursorTracker.style.opacity = "0";
+
+      let charIndex = 0;
+
+      function writeNextChar() {
+        if (charIndex < letterText.length) {
+          typedContent.innerText = letterText.substring(0, charIndex + 1);
+          typedContent.appendChild(cursorTracker);
+
+          // Update pen position to match letter tip
+          const trackerRect = cursorTracker.getBoundingClientRect();
+          const containerRect = container.getBoundingClientRect();
+          
+          pen.style.top = `${trackerRect.top - containerRect.top}px`;
+          pen.style.left = `${trackerRect.left - containerRect.left}px`;
+
+          charIndex++;
+          setTimeout(writeNextChar, 45); // Adjust writing speed here
+        } else {
+          cursorTracker.remove();
+          pen.style.display = "none";
+          document.getElementById('letter-next').style.display = 'inline-block';
+          confetti({ particleCount: 30, spread: 50, origin: { y: 0.6 } });
+        }
+      }
+
+      setTimeout(writeNextChar, 300);
+    }
+
+    // Gift Unwrap Logic
+    let giftTaps = 3;
+    function tapGift() {
+      if (giftTaps <= 0) return;
+      giftTaps--;
+      const box = document.getElementById('gift-box');
+      const status = document.getElementById('gift-status');
+
+      if (giftTaps > 0) {
+        status.innerText = `${giftTaps} more tap${giftTaps > 1 ? 's' : ''}!`;
+        box.style.transform = `scale(${1 + (3 - giftTaps) * 0.1})`;
+      } else {
+        box.innerText = '💖';
+        status.style.display = 'none';
+        document.getElementById('final-card').style.display = 'block';
+        triggerCelebration();
+      }
+    }
+
+    // Confetti Celebration
+    function triggerCelebration() {
+      confetti({
+        particleCount: 90,
+        spread: 75,
+        origin: { y: 0.6 },
+        colors: ['#FF85A1', '#FFC2D1', '#B5E2FA', '#FF477E']
+      });
+    }
+
+    // Background Floating Hearts
+    const heartSymbols = ['💖', '🌸', '✨', '💕', '☁️'];
+    for (let i = 0; i < 15; i++) {
+      const heart = document.createElement('span');
+      heart.className = 'bg-heart';
+      heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+      heart.style.left = `${Math.random() * 100}vw`;
+      heart.style.animationDelay = `${Math.random() * 6}s`;
+      heart.style.fontSize = `${Math.random() * 1 + 1}rem`;
+      document.body.appendChild(heart);
+    }
+  </script>
+</body>
+</html>
